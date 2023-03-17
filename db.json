@@ -1,0 +1,39 @@
+{
+  "user": [
+    {
+      "orderID": 1,
+      "creationDate": "1/1/2023",
+      "createdBy": "John",
+      "orderType": 1,
+      "customer": "Aaron"
+    },
+    {
+      "orderId": 2,
+      "creationDate": "1/2/2023",
+      "createdBy": "Joe",
+      "orderType": 2,
+      "customer": "Billy"
+    },
+    {
+      "orderId": 3,
+      "creationDate": "1/3/2023",
+      "createdBy": "Steve",
+      "orderType": 3,
+      "customer": "Jimmy"
+    },
+    {
+      "orderId": 4,
+      "creationDate": "1/4/2023",
+      "createdBy": "Joe",
+      "orderType": 4,
+      "customer": "Billy"
+    },
+    {
+      "orderId": 5,
+      "creationDate": "1/5/2023",
+      "createdBy": "Steve",
+      "orderType": 5,
+      "customer": "Jimmy"
+    }
+  ]
+}
