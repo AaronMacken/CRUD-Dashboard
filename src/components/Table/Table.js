@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { withStyles, makeStyles } from '@material-ui/core/styles';
@@ -150,3 +151,14 @@ const mapStateToProps = ({ checkboxReducer: { checkboxValues, checkboxesPendingD
 });
 
 export default connect(mapStateToProps, { updateCheckboxValue, updateHeaderCheckboxValue })(Table);
+
+Table.propTypes = {
+  checkboxValues: PropTypes.instanceOf(Map).isRequired, 
+  checkboxesPendingDelete: PropTypes.instanceOf(Set).isRequired, 
+  isHeaderChecked: PropTypes.bool.isRequired, 
+  rows: PropTypes.arrayOf(PropTypes.object).isRequired, 
+  orderIdFilter: PropTypes.string.isRequired, 
+  orderTypeFilter: PropTypes.string.isRequired, 
+  updateCheckboxValue: PropTypes.func.isRequired, 
+  updateHeaderCheckboxValue: PropTypes.func.isRequired
+}

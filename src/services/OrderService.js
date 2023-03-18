@@ -40,3 +40,5 @@ export const deleteOrders = async ordersToDelete => {
         handleError(error);
     }
 }
+
+// endpoint documentation https://red-candidate-web.azurewebsites.net/index.html

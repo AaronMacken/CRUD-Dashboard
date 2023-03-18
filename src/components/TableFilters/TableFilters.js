@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -7,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core';
+import { useMediaQuery } from '@material-ui/core';
 
 import Modal from '../Modal';
 
@@ -16,19 +18,29 @@ import { deleteCheckboxValue } from '../../redux/checkboxActions';
 
 import { OrderTypes } from '../../constants';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   wrapper: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: '1rem',
-    columnGap: '20px'
+    [theme.breakpoints.up('md')]: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingBottom: '1rem',
+      columnGap: '20px',
+    },
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'start',
+      paddingBottom: '1rem',
+      rowGap: '20px',
   },
   orderType: {
-    width: 200
+    [theme.breakpoints.up('md')]: {
+      width: 200
+    }
   }
-});
+}));
 
 const TableFilters = ({ 
   checkboxesPendingDelete, 
@@ -41,6 +53,7 @@ const TableFilters = ({
   const [ orderIdInput, setOrderIdInput ] = useState('');
   const [ orderType, setOrderType ] = useState('');
   const [ isModalShowing, setIsModalShowing ] = useState(false);
+  const isMediumScreenSizeOrMore = useMediaQuery('(max-width:959px');
 
   const handleOrderIdInputChange = ({ target: { value }}) => {
     setOrderIdInput(value);
@@ -64,11 +77,11 @@ const TableFilters = ({
     });
   }
 
-  const renderOrderIdInput = () => {
-    return <TextField label='Order ID Search' variant='outlined' value={orderIdInput} onChange={handleOrderIdInputChange} />;
-  }
-
   const renderModal = () => <Modal isModalShowing={isModalShowing} onCreateOrder={onCreateOrder} onToggleModal={setIsModalShowing} />;
+
+  const renderOrderIdInput = () => {
+    return <TextField label='Order ID Search' variant='outlined' fullWidth={isMediumScreenSizeOrMore} value={orderIdInput} onChange={handleOrderIdInputChange} />;
+  }
 
   const renderCreateButton = () => {
     return (
@@ -77,6 +90,7 @@ const TableFilters = ({
         variant="contained"
         color="primary"
         className={classes.button}
+        fullWidth={isMediumScreenSizeOrMore}
         startIcon={<AddIcon />}
         onClick={() => setIsModalShowing(true)}>
         Create Order
@@ -91,6 +105,7 @@ const TableFilters = ({
         variant="contained"
         color="primary"
         className={classes.button}
+        fullWidth={isMediumScreenSizeOrMore}
         startIcon={<DeleteIcon />}
         onClick={handleDelete}>
         Delete Selected
@@ -106,6 +121,7 @@ const TableFilters = ({
         select
         value={orderType}
         variant="outlined"
+        fullWidth={isMediumScreenSizeOrMore}
         onChange={handleOrderTypeChange}>
         <MenuItem value={''}>All</MenuItem>
         <MenuItem value={OrderTypes.STANDARD}>Standard</MenuItem>
@@ -134,6 +150,15 @@ const TableFilters = ({
       { OrderTypeInput }
     </div>
   )
+}
+
+TableFilters.propTypes = {
+  checkboxesPendingDelete: PropTypes.instanceOf(Set), 
+  deleteCheckboxValue: PropTypes.func.isRequired, 
+  onCreateOrder: PropTypes.func.isRequired, 
+  onDeleteOrders: PropTypes.func.isRequired, 
+  onOrderIdInputChange: PropTypes.func.isRequired, 
+  onOrderTypeChange: PropTypes.func.isRequired
 }
 
 const mapStateToProps = ({ checkboxReducer: { checkboxesPendingDelete }}) => ({

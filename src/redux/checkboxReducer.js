@@ -11,7 +11,7 @@ const initialState = {
     isHeaderChecked: false
 }
 
-const checkboxReducer = (state = initialState, action) => {
+const checkboxReducer = (state = initialState, action = {}) => {
     const { checkboxId } = action;
     const { checkboxValues, checkboxesPendingDelete } = state;
     
@@ -40,11 +40,16 @@ const checkboxReducer = (state = initialState, action) => {
 
         case DELETE_CHECKBOX_VALUE:
             const deleteValuesCopy = new Map(checkboxValues);
+            const deletePendingCopy = new Set(checkboxesPendingDelete)
 
             deleteValuesCopy.delete(checkboxId)
-            checkboxesPendingDelete.delete(checkboxId);
+            deletePendingCopy.delete(checkboxId);
 
-            return { ...state, checkboxValues: deleteValuesCopy };
+            return { 
+                ...state, 
+                checkboxValues: deleteValuesCopy, 
+                checkboxesPendingDelete: deletePendingCopy 
+            };
 
         default:
         return state;

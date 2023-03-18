@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import BaseModal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
@@ -18,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
         width: 400,
         backgroundColor: theme.palette.background.paper,
         border: '2px solid',
-        borderColor: theme.palette.primary.light,
-        borderRadius: '5px',
+        borderColor: theme.palette.primary.dark,
+        borderRadius: '9px',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
         top: `50%`,
@@ -70,8 +71,7 @@ export default function Modal({ isModalShowing, onCreateOrder, onToggleModal }) 
         label="Full Name" 
         variant="outlined" 
         value={nameInput}
-        onChange={({ target: { value }}) => setNameInput(value)} 
-    />;
+        onChange={({ target: { value }}) => setNameInput(value)} />;
   }
 
   const renderOrderTypeInput = () => {
@@ -116,7 +116,7 @@ export default function Modal({ isModalShowing, onCreateOrder, onToggleModal }) 
                 Submit
             </Button>
         </form>
-    )
+    );
   }
 
   const NameInput = renderNameInput();
@@ -143,4 +143,10 @@ export default function Modal({ isModalShowing, onCreateOrder, onToggleModal }) 
       </BaseModal>
     </div>
   );
+}
+
+Modal.propTypes = {
+  isModalShowing: PropTypes.bool.isRequired,
+  onCreateOrder: PropTypes.func.isRequired, 
+  onToggleModal: PropTypes.func.isRequired
 }

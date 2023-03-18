@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Table from '../../components/Table';
 import TableFilters from '../../components/TableFilters';
 
 import { fetchOrders } from '../../services/OrderService';
-
 import { addCheckboxValue } from '../../redux/checkboxActions';
 
-// endpoint documentation https://red-candidate-web.azurewebsites.net/index.html
+const useStyles = makeStyles((theme) => ({
+  grid: {
+    padding: theme.spacing(2)
+  }
+}));
 
 // TODO: Loading logic
 function Dashboard({ addCheckboxValue }) {
@@ -37,8 +43,12 @@ function Dashboard({ addCheckboxValue }) {
     setRows(remainingRows);
   }
 
+  const classes = useStyles();
+
   return (
-    <>
+    <Grid className={classes.grid} container>
+      <Grid item xs={12}>
+
       <TableFilters 
         onCreateOrder={handleCreateOrder}
         onDeleteOrders={handleDeleteOrders}
@@ -48,14 +58,16 @@ function Dashboard({ addCheckboxValue }) {
         orderIdFilter={orderIdFilter}
         orderTypeFilter={orderTypeFilter}
         rows={rows} />
-    </>
+      </Grid>
+    </Grid>
   );
 }
 
 export default connect(null, { addCheckboxValue })(Dashboard);
 
-// TODO: Filter responsiveness - Saturday
-// TODO: Prop types - Saturday
-// TODO: Unit Tests - Saturday
+Dashboard.propTypes = {
+  addCheckboxValue: PropTypes.func.isRequired
+}
+
 // TODO: TypeScript Attempt - Saturday
 // TODO: create-react-app heroku deploy - Saturday
