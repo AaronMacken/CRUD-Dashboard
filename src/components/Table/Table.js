@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Checkbox from '@material-ui/core/Checkbox';
 import BaseTable from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,6 +10,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+
+import { updateCheckboxValue, updateHeaderCheckboxValue } from '../../redux/checkboxActions';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -33,10 +37,40 @@ const useStyles = makeStyles({
   },
 });
 
-const Table = ({ rows, orderIdFilter, orderTypeFilter }) => {
+const Table = ({ 
+  checkboxValues, 
+  checkboxesPendingDelete, 
+  isHeaderChecked, 
+  rows, 
+  orderIdFilter, 
+  orderTypeFilter, 
+  updateCheckboxValue, 
+  updateHeaderCheckboxValue 
+}) => {
+  const getIsHeaderDisabled = () => {
+    return checkboxesPendingDelete.size && !isHeaderChecked;
+  }
+
+  const getCheckboxValue = checkboxId => {
+    return checkboxValues.get(checkboxId);
+  }
+
+  const handleCheckAll = () => {
+    const checkboxKeys = [ ...checkboxValues.keys() ];
+
+    if (!checkboxesPendingDelete.size) {
+      updateHeaderCheckboxValue(true);
+      checkboxKeys.forEach(key => updateCheckboxValue(key));
+    }
+
+    if (checkboxKeys.length === checkboxesPendingDelete.size) {
+      updateHeaderCheckboxValue(false);
+      checkboxKeys.forEach(key => updateCheckboxValue(key));
+    }
+  }
+
   const getRows = () => {
     const isTableFiltered = Boolean(orderIdFilter.length || orderTypeFilter.length);
-      
     if (!isTableFiltered) {
         return rows;
     }
@@ -46,9 +80,13 @@ const Table = ({ rows, orderIdFilter, orderTypeFilter }) => {
     });
   }
 
+  const filteredRows = getRows();
+
   const renderTableHeaderContent = () => {
+    const isTableEmpty = !filteredRows.length;
     return (
       <TableRow>
+        { !isTableEmpty && <Checkbox onChange={handleCheckAll} checked={isHeaderChecked} disabled={getIsHeaderDisabled()} /> }
         <StyledTableCell>Order ID</StyledTableCell>
         <StyledTableCell align="left">Creation Date</StyledTableCell>
         <StyledTableCell align="left">Created By</StyledTableCell>
@@ -74,6 +112,7 @@ const Table = ({ rows, orderIdFilter, orderTypeFilter }) => {
     return (
       rows.map(({ orderId, orderType, customerName, createdDate, createdByUserName }) => (
         <StyledTableRow key={orderId}>
+          <Checkbox checked={getCheckboxValue(orderId)} onChange={() => updateCheckboxValue(orderId)}/>
           <StyledTableCell component="th" scope="row">{orderId}</StyledTableCell>
           <StyledTableCell align="left">{createdDate}</StyledTableCell>
           <StyledTableCell align="left">{createdByUserName}</StyledTableCell>
@@ -85,7 +124,6 @@ const Table = ({ rows, orderIdFilter, orderTypeFilter }) => {
   }
 
   const classes = useStyles();
-  const filteredRows = getRows();
   const TableHeaderContent = renderTableHeaderContent();
   const TableContent = renderTableContent(filteredRows);
 
@@ -103,6 +141,12 @@ const Table = ({ rows, orderIdFilter, orderTypeFilter }) => {
   )
 }
 
-export default Table;
+Table.propTypes = {}
 
-// TODO: Prop Types
+const mapStateToProps = ({ checkboxReducer: { checkboxValues, checkboxesPendingDelete, isHeaderChecked }}) => ({
+  checkboxValues,
+  checkboxesPendingDelete,
+  isHeaderChecked
+});
+
+export default connect(mapStateToProps, { updateCheckboxValue, updateHeaderCheckboxValue })(Table);

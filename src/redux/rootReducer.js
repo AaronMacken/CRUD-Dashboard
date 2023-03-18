@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import usersReducers from './reducer';
+import checkboxReducer from './checkboxReducer';
 
 const rootReducer = combineReducers({ 
-    users: usersReducers
+    checkboxReducer
 });
 
 export default rootReducer;

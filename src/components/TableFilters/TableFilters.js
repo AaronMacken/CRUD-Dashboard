@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 
-import AddIcon from '@material-ui/icons/Add'
+import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -8,6 +9,10 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core';
 
 import Modal from '../Modal';
+
+import { deleteOrders } from '../../services/OrderService';
+
+import { deleteCheckboxValue } from '../../redux/checkboxActions';
 
 import { OrderTypes } from '../../constants';
 
@@ -23,9 +28,16 @@ const useStyles = makeStyles({
   orderType: {
     width: 200
   }
-})
+});
 
-const TableFilters = ({ onCreateOrder, onOrderIdInputChange, onOrderTypeChange }) => {
+const TableFilters = ({ 
+  checkboxesPendingDelete, 
+  deleteCheckboxValue, 
+  onCreateOrder, 
+  onDeleteOrders, 
+  onOrderIdInputChange, 
+  onOrderTypeChange 
+}) => {
   const [ orderIdInput, setOrderIdInput ] = useState('');
   const [ orderType, setOrderType ] = useState('');
   const [ isModalShowing, setIsModalShowing ] = useState(false);
@@ -42,8 +54,18 @@ const TableFilters = ({ onCreateOrder, onOrderIdInputChange, onOrderTypeChange }
     return onOrderTypeChange(value);
   }
 
+  const handleDelete = async () => {
+    const ordersToDelete = [ ...checkboxesPendingDelete ];
+
+    await deleteOrders(ordersToDelete);
+    onDeleteOrders(ordersToDelete);
+    ordersToDelete.forEach(order => {
+      deleteCheckboxValue(order);
+    });
+  }
+
   const renderOrderIdInput = () => {
-    return <TextField label="Order ID Search" variant="outlined" value={orderIdInput} onChange={handleOrderIdInputChange} />;
+    return <TextField label='Order ID Search' variant='outlined' value={orderIdInput} onChange={handleOrderIdInputChange} />;
   }
 
   const renderModal = () => <Modal isModalShowing={isModalShowing} onCreateOrder={onCreateOrder} onToggleModal={setIsModalShowing} />;
@@ -70,7 +92,7 @@ const TableFilters = ({ onCreateOrder, onOrderIdInputChange, onOrderTypeChange }
         color="primary"
         className={classes.button}
         startIcon={<DeleteIcon />}
-        onClick={() => console.log('delete logic')}>
+        onClick={handleDelete}>
         Delete Selected
       </Button>
     );
@@ -114,4 +136,8 @@ const TableFilters = ({ onCreateOrder, onOrderIdInputChange, onOrderTypeChange }
   )
 }
 
-export default TableFilters
+const mapStateToProps = ({ checkboxReducer: { checkboxesPendingDelete }}) => ({
+  checkboxesPendingDelete
+});
+
+export default connect(mapStateToProps, { deleteCheckboxValue })(TableFilters);

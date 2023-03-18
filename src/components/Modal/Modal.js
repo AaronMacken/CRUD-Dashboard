@@ -52,17 +52,13 @@ export default function Modal({ isModalShowing, onCreateOrder, onToggleModal }) 
     };
 
     if (!isFormError) {
-        try {
-            const newOrder = await createOrder(payload);
+        const newOrder = await createOrder(payload);
 
-            setNameInput('');
-            setOrderType('');
-        
-            onToggleModal(false);
-            return onCreateOrder(newOrder);
-        } catch (error) {
-            console.error('modal.error: ', error);
-        }
+        setNameInput('');
+        setOrderType('');
+    
+        onToggleModal(false);
+        return onCreateOrder(newOrder);
     }
   }
 
