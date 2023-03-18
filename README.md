@@ -1,0 +1,8 @@
+- Project is build with create-react-app and can be run using `npm start`
+- Implemented the mandatory features originally using react functional component state
+- Had to brush up on Material UI & Redux as its been a while since I used them
+- Setup redux structure and used it to create a synchronized checkbox experience
+- Wrote some unit tests for the checkbox reducer logic
+- Unit test coverage and moving the necessary state from react to redux is a WIP
+- My typescript is very rusy so I opted to create a folder called `TypeScriptAttempt` where I did some basic typing as practice
+- App hosted on heroku

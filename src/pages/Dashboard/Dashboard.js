@@ -68,6 +68,3 @@ export default connect(null, { addCheckboxValue })(Dashboard);
 Dashboard.propTypes = {
   addCheckboxValue: PropTypes.func.isRequired
 }
-
-// TODO: TypeScript Attempt - Saturday
-// TODO: create-react-app heroku deploy - Saturday
